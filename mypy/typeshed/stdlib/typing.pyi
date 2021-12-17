@@ -36,6 +36,7 @@ class _SpecialForm:
     def __getitem__(self, typeargs: Any) -> object: ...
 
 _F = TypeVar("_F", bound=Callable[..., Any])
+_C = TypeVar("_C", bound=Callable[..., Coroutine])
 _P = _ParamSpec("_P")
 _T = TypeVar("_T")
 
@@ -426,6 +427,8 @@ class AsyncContextManager(Protocol[_T_co]):
     def __aexit__(
         self, __exc_type: Type[BaseException] | None, __exc_value: BaseException | None, __traceback: TracebackType | None
     ) -> Awaitable[bool | None]: ...
+    if sys.version_info >= (3, 10):
+        def __call__(self, func: _C) -> _C: ...
 
 class Mapping(Collection[_KT], Generic[_KT, _VT_co]):
     # TODO: We wish the key type could also be covariant, but that doesn't work,
